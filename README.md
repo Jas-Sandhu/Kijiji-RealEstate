@@ -1,2 +1,2 @@
 # Kijiji-RealEstate
-Data Science project centered the Toronto rental market
+Data Science project centered the Toronto rental market.
