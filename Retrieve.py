@@ -36,61 +36,85 @@ def location(soup):
         address = "Error"
     return address
 
-def datapoints(data):
+def datapoints(soup):
     info = {}
     
+    data = soup.find_all("dt", class_="twoLinesLabel-3766429502")
+    
     for point in data:
+        
         check = point.string
         
         if (check) == "Unit Type":
-            info["Type"] = point.nextSibling.string
+            info["UnitType"] = point.nextSibling.string
         
-        if (check) == "Bedrooms":
+        elif (check) == "Bedrooms":
             info[check] = point.nextSibling.string        
         
         elif (check) == "Bathrooms":
-            info[check] = point.nextSibling.string
-            
-        elif (check) == "Utilities Included":
-            info["Hydro"] = point.nextSibling.string
-            info["Heat"] = point.nextSibling.nextSibling.string
-            info["Water"] = point.nextSibling.nextSibling.nextSibling.string        
-            
-        elif (check) == "Also Included":
-            info["Cable"] = point.nextSibling.string
-            info["Internet"] = point.nextSibling.nextSibling.string
-            info["Landline"] = point.nextSibling.nextSibling.nextSibling.string         
+            info[check] = point.nextSibling.string        
             
         elif (check) == "Parking Included":
             info["Parking"] = point.nextSibling.string
             
         elif (check) == "Agreement Type":
-            info["Agreement"] = point.nextSibling.string
+            info["AgreementType"] = point.nextSibling.string
         
         elif (check) == "Move-In Date":
             info["MoveInDate"] = point.nextSibling.string  
             
         elif (check) == "Pet Friendly":
-            info["Pet"] = point.nextSibling.string          
+            info["PetFriendly"] = point.nextSibling.string          
         
         elif (check) == "Size (sqft)":
-            info['Sqft'] = point.nextSibling.string.replace(",","")         
+            info['SquareFeet'] = point.nextSibling.string.replace(",","")         
         
         elif (check) == "Furnished":
-            info[check] = point.nextSibling.string
-            
-        elif (check) == "Appliances":
-            info["Laundry_In"] = point.nextSibling.string
-            info["Laundry_Out"] = point.nextSibling.nextSibling.string         
+            info[check] = point.nextSibling.string       
             
         elif (check) == "Air Conditioning":
             info["AirConditioning"] = point.nextSibling.string
         
         elif (check) == "Smoking Permitted":
             info["Smoking"] = point.nextSibling.string
-    
-        elif (check) == "Personal Outdoor Space":
-            info["Yard"] = point.nextSibling.string
-            info["Balcony"] = point.nextSibling.nextSibling.string
+            
+        data = soup.find_all("svg", class_="icon-459822882 yesNoIcon-2594104508")
+        data = data + soup.find_all("svg", class_="icon-459822882 yesNoIcon-2594104508 yesIcon-3014691322")
 
+        for point in data:
+            
+            check = point['aria-label'].split(':')[1].strip()
+            
+            value = point['aria-label'].split(':')[0].strip()
+            
+            if check == 'Laundry (In Unit)':
+                info["LaundryIn"] = value
+            
+            elif check == "Laundry (In Building)":
+                info["LaundryOut"] = value
+            
+            elif (check) == "Hydro":
+                info["Hydro"] = value
+                
+            elif (check) == "Heat":
+                info["Heat"] = value
+                
+            elif (check) == "Water":
+                info["Water"] = value        
+                
+            elif (check) == "Cable / TV":
+                info["Cable"] = value
+            
+            elif (check) == "Internet":
+                info["Internet"] = value
+            
+            elif (check) == "Landline":
+                info["Landline"] = value
+        
+            elif (check) == "Yard":
+                info["Yard"] = value
+                
+            elif (check) == "Balcony":
+                info["Balcony"] = value
+                
     return info
